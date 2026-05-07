@@ -16,6 +16,8 @@ const activityRoutes = require('./routes/activity.routes');
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 // ---------- Security Middleware ----------
 app.use(helmet({
   contentSecurityPolicy: false,
