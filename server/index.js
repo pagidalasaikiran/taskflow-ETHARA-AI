@@ -25,21 +25,32 @@ app.use(helmet({
 }));
 
 // CORS — environment-based
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "http://127.0.0.1:5173",
+  "https://taskflow-ethara-ai.vercel.app",
+  "https://taskflow-ethara-2204dfsyp-pagidalasakirans-projects.vercel.app"
+];
+
 const corsOptions = {
-  origin: config.NODE_ENV === 'production'
-    ? config.CLIENT_URL || true
-    : ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // limit each IP to 200 requests per window
-  message: { success: false, message: 'Too many requests, please try again later.' },
+  max: 100, // limit each IP to 100 requests per window
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -60,17 +71,6 @@ app.use('/api/activities', activityRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'API is running', environment: config.NODE_ENV });
 });
-
-// ---------- Production: Serve Frontend ----------
-if (config.NODE_ENV === 'production') {
-  const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
-  app.use(express.static(clientBuildPath));
-
-  // SPA catch-all — serve index.html for non-API routes
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
-}
 
 // ---------- Error Handler ----------
 app.use(errorHandler);
