@@ -41,10 +41,14 @@ const errorHandler = (err, req, res, next) => {
     message = 'Token expired';
   }
 
-  // Log error in development
-  if (config.NODE_ENV === 'development') {
-    console.error('Error:', err);
-  }
+  // Log error for debugging in all environments
+  console.error('[SERVER ERROR]:', {
+    name: err.name,
+    message: err.message,
+    stack: config.NODE_ENV === 'development' ? err.stack : 'OMITTED_IN_PROD',
+    path: req.path,
+    method: req.method,
+  });
 
   return errorResponse(res, message, statusCode, errors);
 };
