@@ -94,7 +94,7 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
@@ -109,73 +109,77 @@ export default function ProjectsPage() {
         />
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {projects.map((project) => (
               <Card
                 key={project._id}
-                className="p-5 cursor-pointer flex flex-col h-full hover:shadow-md transition-shadow"
+                className="p-6 cursor-pointer flex flex-col h-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 onClick={() => navigate(`/projects/${project._id}`)}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-base font-semibold text-surface-800 truncate pr-2">{project.title}</h3>
-                  <Badge className={PROJECT_STATUS_COLORS[project.status]}>
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-lg font-bold text-surface-900 truncate pr-2 tracking-tight">{project.title}</h3>
+                  <Badge className={`${PROJECT_STATUS_COLORS[project.status]} px-2.5 py-1 text-xs font-semibold rounded-full`}>
                     {PROJECT_STATUS_LABELS[project.status]}
                   </Badge>
                 </div>
 
-                <p className="text-sm text-surface-500 line-clamp-2 mb-4 min-h-[2.5rem]">
-                  {project.description || 'No description'}
+                <p className="text-sm text-surface-500 line-clamp-3 mb-6 min-h-[3rem] leading-relaxed">
+                  {project.description || 'No description provided'}
                 </p>
 
-                <ProgressBar value={project.progress} size="sm" />
-
-                <div className="mt-auto pt-4 flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                  <div className="flex -space-x-2">
-                    {project.teamMembers?.slice(0, 4).map((m) => (
-                      <div
-                        key={m._id}
-                        className="w-7 h-7 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-white"
-                        title={m.name}
-                      >
-                        {m.name?.charAt(0)?.toUpperCase()}
-                      </div>
-                    ))}
-                    {project.teamMembers?.length > 4 && (
-                      <div className="w-7 h-7 bg-surface-200 rounded-full flex items-center justify-center text-surface-600 text-xs font-medium border-2 border-white">
-                        +{project.teamMembers.length - 4}
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-xs text-surface-400">{format(project.createdAt)}</span>
+                <div className="space-y-4">
+                  <ProgressBar value={project.progress} size="md" />
                 </div>
 
-                {/* Action buttons */}
-                {(canEditProject || canDeleteProject) && (
-                  <div className="flex gap-2 pt-3 border-t border-surface-50 w-full">
-                    {canEditProject && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setEditProject(project); }}
-                        className="text-xs text-primary-600 hover:text-primary-700 font-medium"
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {canDeleteProject && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(project); }}
-                        className="text-xs text-red-500 hover:text-red-600 font-medium"
-                      >
-                        Delete
-                      </button>
-                    )}
+                <div className="mt-auto pt-6 flex flex-col gap-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex -space-x-3">
+                      {project.teamMembers?.slice(0, 4).map((m) => (
+                        <div
+                          key={m._id}
+                          className="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white ring-1 ring-surface-100"
+                          title={m.name}
+                        >
+                          {m.name?.charAt(0)?.toUpperCase()}
+                        </div>
+                      ))}
+                      {project.teamMembers?.length > 4 && (
+                        <div className="w-8 h-8 bg-surface-100 rounded-full flex items-center justify-center text-surface-600 text-xs font-bold border-2 border-white ring-1 ring-surface-100">
+                          +{project.teamMembers.length - 4}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs font-medium text-surface-400">{format(project.createdAt)}</span>
                   </div>
-                )}
-              </div>
-            </Card>
+
+                  {/* Action buttons */}
+                  {(canEditProject || canDeleteProject) && (
+                    <div className="flex gap-4 pt-4 border-t border-surface-100 w-full">
+                      {canEditProject && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setEditProject(project); }}
+                          className="text-xs text-primary-600 hover:text-primary-700 font-bold uppercase tracking-wider transition-colors"
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {canDeleteProject && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setDeleteTarget(project); }}
+                          className="text-xs text-red-500 hover:text-red-700 font-bold uppercase tracking-wider transition-colors"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Card>
             ))}
           </div>
-          <Pagination pagination={pagination} onPageChange={handlePageChange} />
+          <div className="pt-8">
+            <Pagination pagination={pagination} onPageChange={handlePageChange} />
+          </div>
         </>
       )}
 

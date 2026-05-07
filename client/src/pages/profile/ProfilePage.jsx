@@ -33,9 +33,9 @@ export default function ProfilePage() {
   const isLoading = tasksLoading || projectsLoading;
 
   return (
-    <div className="space-y-6 w-full max-w-4xl mx-auto">
+    <div className="space-y-8 w-full">
       {/* User Info Card */}
-      <Card className="p-6">
+      <Card className="p-8">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
           <div className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-primary-200 shrink-0">
             {user?.name?.charAt(0)?.toUpperCase()}

@@ -113,82 +113,96 @@ export default function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map(({ label, value, icon: Icon, color, iconBg, sub }, i) => (
-          <Card key={i} className="p-5 h-full flex flex-col justify-between">
-            <div className="flex items-start justify-between">
+          <Card key={i} className="p-6 min-h-[120px] flex flex-col justify-center border-surface-200">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-surface-500 mb-1">{label}</p>
-                <p className="text-2xl font-bold text-surface-800">{value}</p>
-                {sub && <p className="text-xs text-surface-400 mt-1">{sub}</p>}
+                <p className="text-sm font-medium text-surface-500 mb-1">{label}</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-3xl font-bold text-surface-900 tracking-tight">{value}</p>
+                  {sub && <span className="text-xs text-emerald-600 font-medium">{sub}</span>}
+                </div>
               </div>
-              <div className={`p-2.5 rounded-xl ${iconBg}`}>
-                <Icon className={`w-5 h-5 ${color.split(' ')[1]}`} />
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${iconBg} shadow-sm`}>
+                <Icon className={`w-6 h-6 ${color.split(' ')[1]}`} />
               </div>
             </div>
           </Card>
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="p-6 flex flex-col h-full">
-          <h3 className="text-sm font-semibold text-surface-700 mb-4">Task Distribution</h3>
+        <Card className="p-8 flex flex-col h-full">
+          <h3 className="text-base font-bold text-surface-900 mb-8 tracking-tight">Task Distribution</h3>
           {stats.totalTasks > 0 ? (
-            <div className="relative w-full h-[320px] min-h-[320px] flex-1">
+            <div className="relative w-full h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={85}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {statusData.map((_, i) => (
-                    <Cell key={i} fill={CHART_COLORS[i]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value, name) => [value, name]} />
-              </PieChart>
+                <PieChart>
+                  <Pie
+                    data={statusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={70}
+                    outerRadius={100}
+                    paddingAngle={8}
+                    dataKey="value"
+                  >
+                    {statusData.map((_, i) => (
+                      <Cell key={i} fill={CHART_COLORS[i]} stroke="none" />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  />
+                </PieChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="flex-1 min-h-[320px] flex items-center justify-center text-surface-400 text-sm">
-              No tasks yet
-            </div>
+            <div className="h-[320px] flex items-center justify-center text-surface-400">No data available</div>
           )}
-          <div className="flex justify-center flex-wrap gap-4 mt-6 border-t border-surface-50 pt-4">
+          
+          <div className="flex justify-center flex-wrap gap-6 mt-8">
             {statusData.map((entry, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-xs text-surface-600">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: CHART_COLORS[i] }} />
+              <div key={i} className="flex items-center gap-2 text-sm text-surface-600 font-medium">
+                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: CHART_COLORS[i] }} />
                 {entry.name}: {entry.value}
               </div>
             ))}
           </div>
         </Card>
 
-        <Card className="p-6 flex flex-col h-full">
-          <h3 className="text-sm font-semibold text-surface-700 mb-4">Priority Breakdown</h3>
+        <Card className="p-8 flex flex-col h-full">
+          <h3 className="text-base font-bold text-surface-900 mb-8 tracking-tight">Priority Breakdown</h3>
           {stats.totalTasks > 0 ? (
-            <div className="relative w-full h-[320px] min-h-[320px] flex-1">
+            <div className="relative w-full h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={priorityData}>
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  {priorityData.map((_, i) => (
-                    <Cell key={i} fill={PRIORITY_CHART_COLORS[i]} />
-                  ))}
-                </Bar>
-              </BarChart>
+                <BarChart data={priorityData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 13, fill: '#64748b' }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    dy={10}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 13, fill: '#64748b' }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                  />
+                  <Tooltip 
+                    cursor={{ fill: 'transparent' }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
+                    {priorityData.map((_, i) => (
+                      <Cell key={i} fill={PRIORITY_CHART_COLORS[i]} />
+                    ))}
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="flex-1 min-h-[320px] flex items-center justify-center text-surface-400 text-sm">
-              No tasks yet
-            </div>
+            <div className="h-[320px] flex items-center justify-center text-surface-400">No data available</div>
           )}
         </Card>
       </div>

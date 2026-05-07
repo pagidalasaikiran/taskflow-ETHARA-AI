@@ -109,39 +109,43 @@ export default function TasksPage() {
     };
 
     return (
-      <Card key={task._id} className={`p-4 ${dueStatus === 'overdue' ? 'border-l-3 border-l-red-400' : ''}`}>
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h4 className="text-sm font-medium text-surface-800 line-clamp-2">{task.title}</h4>
-          <Badge className={PRIORITY_COLORS[task.priority]}>
+      <Card 
+        key={task._id} 
+        className={`p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border-surface-100 ${dueStatus === 'overdue' ? 'border-l-4 border-l-red-500' : ''}`}
+      >
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <h4 className="text-sm font-bold text-surface-900 leading-snug tracking-tight">{task.title}</h4>
+          <Badge className={`${PRIORITY_COLORS[task.priority]} px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md`}>
             {PRIORITY_LABELS[task.priority]}
           </Badge>
         </div>
 
         {task.description && (
-          <p className="text-xs text-surface-400 line-clamp-2 mb-3">{task.description}</p>
+          <p className="text-xs text-surface-500 line-clamp-2 mb-4 leading-relaxed font-medium">{task.description}</p>
         )}
 
-        <div className="flex items-center gap-2 flex-wrap mb-3">
+        <div className="flex items-center gap-2 flex-wrap mb-5">
           {task.project?.title && (
-            <span className="text-xs bg-primary-50 text-primary-600 px-2 py-0.5 rounded-md">
+            <span className="text-[10px] bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tight">
               {task.project.title}
             </span>
           )}
           {task.dueDate && (
-            <span className={`text-xs px-2 py-0.5 rounded-md ${dueDateClasses[dueStatus]}`}>
-              {dueStatus === 'overdue' ? '⚠ ' : ''}{format(task.dueDate)}
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tight flex items-center gap-1 ${dueDateClasses[dueStatus]}`}>
+              <Calendar className="w-3 h-3" />
+              {format(task.dueDate)}
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-4 border-t border-surface-50">
           <div className="flex items-center gap-2">
             {task.assignedTo && (
-              <div className="flex items-center gap-1.5" title={task.assignedTo.name}>
-                <div className="w-5 h-5 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-[10px] font-semibold">
+              <div className="flex items-center gap-2" title={task.assignedTo.name}>
+                <div className="w-6 h-6 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white shadow-sm">
                   {task.assignedTo.name?.charAt(0)?.toUpperCase()}
                 </div>
-                <span className="text-xs text-surface-500">{task.assignedTo.name}</span>
+                <span className="text-[11px] font-bold text-surface-600 truncate max-w-[80px]">{task.assignedTo.name}</span>
               </div>
             )}
           </div>
@@ -150,17 +154,17 @@ export default function TasksPage() {
             {canEditTask(task) && (
               <button
                 onClick={() => setEditTask(task)}
-                className="p-1 rounded hover:bg-surface-100 text-surface-400 hover:text-primary-500 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-surface-100 text-surface-400 hover:text-primary-600 transition-all"
               >
-                <Edit className="w-3.5 h-3.5" />
+                <Edit className="w-4 h-4" />
               </button>
             )}
             {canDeleteTask && (
               <button
                 onClick={() => setDeleteTarget(task)}
-                className="p-1 rounded hover:bg-red-50 text-surface-400 hover:text-red-500 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-red-50 text-surface-400 hover:text-red-500 transition-all"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -172,31 +176,33 @@ export default function TasksPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6 w-full">
         <div>
-          <h2 className="text-xl font-bold text-surface-800">Tasks</h2>
-          <p className="text-sm text-surface-500">Manage and track all team tasks</p>
+          <h2 className="text-2xl font-extrabold text-surface-900 tracking-tight">Tasks</h2>
+          <p className="text-surface-500 font-medium">Manage and track all team tasks in one place</p>
         </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
           {/* View Toggle */}
-          <div className="flex items-center bg-surface-100 rounded-lg p-0.5">
+          <div className="flex items-center bg-surface-100 rounded-xl p-1 shadow-inner">
             <button
               onClick={() => setViewMode('kanban')}
-              className={`p-1.5 rounded-md transition-colors ${viewMode === 'kanban' ? 'bg-white shadow-sm text-primary-600' : 'text-surface-500'}`}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${viewMode === 'kanban' ? 'bg-white shadow-sm text-primary-600' : 'text-surface-500 hover:text-surface-700'}`}
             >
               <LayoutGrid className="w-4 h-4" />
+              Kanban
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-primary-600' : 'text-surface-500'}`}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-primary-600' : 'text-surface-500 hover:text-surface-700'}`}
             >
               <List className="w-4 h-4" />
+              List
             </button>
           </div>
 
           {canCreateTask && (
-            <Button onClick={() => setShowCreateModal(true)}>
-              <Plus className="w-4 h-4" />
+            <Button onClick={() => setShowCreateModal(true)} className="shadow-lg shadow-primary-500/20">
+              <Plus className="w-5 h-5" />
               New Task
             </Button>
           )}
@@ -204,20 +210,20 @@ export default function TasksPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 w-full">
-        <div className="flex-1 min-w-0 max-w-lg">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-6 w-full bg-white p-4 rounded-2xl border border-surface-100 shadow-sm">
+        <div className="flex-1 min-w-0 max-w-xl">
           <SearchInput
             value={search}
             onChange={setSearch}
-            placeholder="Search tasks..."
+            placeholder="Search by title or description..."
             className="w-full"
           />
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-11 px-4 bg-white border border-surface-200 rounded-lg text-sm text-surface-800 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer min-w-[140px]"
+            className="h-11 px-4 bg-surface-50 border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer min-w-[160px] transition-all"
           >
             <option value="">All Statuses</option>
             <option value="todo">To Do</option>
@@ -227,7 +233,7 @@ export default function TasksPage() {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="h-11 px-4 bg-white border border-surface-200 rounded-lg text-sm text-surface-800 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer min-w-[140px]"
+            className="h-11 px-4 bg-surface-50 border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 cursor-pointer min-w-[160px] transition-all"
           >
             <option value="">All Priorities</option>
             <option value="low">Low</option>
@@ -239,9 +245,14 @@ export default function TasksPage() {
 
       {/* Task Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonCard key={i} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-4">
+              <div className="h-6 w-32 bg-surface-200 rounded animate-pulse mb-6" />
+              {Array.from({ length: 3 }).map((_, j) => (
+                <SkeletonCard key={j} />
+              ))}
+            </div>
           ))}
         </div>
       ) : tasks.length === 0 ? (
@@ -254,19 +265,28 @@ export default function TasksPage() {
         />
       ) : viewMode === 'kanban' ? (
         /* Kanban View */
-        <div className="flex gap-6 overflow-x-auto pb-6 w-full snap-x">
+        <div className="flex gap-8 overflow-x-auto pb-8 w-full snap-x scrollbar-thin scrollbar-thumb-surface-200 scrollbar-track-transparent">
           {kanbanColumns.map((col) => {
             const columnTasks = getTasksByStatus(col.id);
             return (
-              <div key={col.id} className={`w-[340px] shrink-0 snap-start bg-surface-50 rounded-xl p-3 border-t-4 ${col.color}`}>
-                <div className="flex items-center justify-between mb-3 px-1">
-                  <h3 className="text-sm font-semibold text-surface-700">{col.label}</h3>
-                  <span className="text-xs bg-white px-2 py-0.5 rounded-full text-surface-500 font-medium">
-                    {columnTasks.length}
-                  </span>
+              <div key={col.id} className="w-[340px] shrink-0 snap-start flex flex-col h-full">
+                <div className="flex items-center justify-between mb-6 px-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-base font-bold text-surface-900 tracking-tight">{col.label}</h3>
+                    <span className="flex items-center justify-center px-2.5 py-0.5 bg-surface-100 text-surface-600 text-xs font-bold rounded-full">
+                      {columnTasks.length}
+                    </span>
+                  </div>
+                  <div className={`w-8 h-1 bg-surface-200 rounded-full ${col.color.replace('border', 'bg')}`} />
                 </div>
-                <div className="space-y-2 min-h-[100px]">
+                
+                <div className="flex flex-col gap-4 min-h-[500px] p-2 bg-surface-50/50 rounded-2xl border border-surface-100/50">
                   {columnTasks.map(renderTaskCard)}
+                  {columnTasks.length === 0 && (
+                    <div className="flex-1 flex flex-col items-center justify-center py-12 border-2 border-dashed border-surface-200 rounded-xl">
+                      <p className="text-xs font-medium text-surface-400">No tasks in {col.label}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             );

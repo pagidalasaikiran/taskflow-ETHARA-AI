@@ -15,7 +15,7 @@ export default function DashboardLayout() {
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 overflow-x-hidden">
-          <div className="w-full animate-fade-in">
+          <div className="w-full animate-fade-in h-full">
             <Outlet />
           </div>
         </main>

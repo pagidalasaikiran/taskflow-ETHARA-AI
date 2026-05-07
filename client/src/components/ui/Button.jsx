@@ -27,7 +27,7 @@ const Button = forwardRef(({
   return (
     <button
       ref={ref}
-      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap shrink-0 font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${variants[variant]} ${sizes[size]} ${
+      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap shrink-0 font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${variants[variant]} ${sizes[size]} ${
         disabled || loading ? 'opacity-60 cursor-not-allowed' : ''
       } ${className}`}
       disabled={disabled || loading}
